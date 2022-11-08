@@ -5,6 +5,9 @@
 
 // The editor creator to use.
 import ClassicEditorBase from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import BalloonEditorBase from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
+import InlineEditorBase from '@ckeditor/ckeditor5-editor-inline/src/inlineeditor';
+import DecoupledEditorBase from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
@@ -32,7 +35,7 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 
-//New plugins
+// New plugins
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 import HtmlEmbed from '@ckeditor/ckeditor5-html-embed/src/htmlembed';
 import WordCount from '@ckeditor/ckeditor5-word-count/src/wordcount';
@@ -80,12 +83,22 @@ import SelectAll from '@ckeditor/ckeditor5-select-all/src/selectall';
 
 import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
 
+//
+import IndentBlock from '@ckeditor/ckeditor5-indent/src/indentblock';
+
 import sanitize from 'sanitize-html';
 
-export default class ClassicEditor extends ClassicEditorBase {}
+class ClassicEditor extends ClassicEditorBase {}
+class BalloonEditor extends BalloonEditorBase {}
+class DecoupledEditor extends DecoupledEditorBase {}
+class InlineEditor extends InlineEditorBase {}
+
+//
+import BlockToolbar from '@ckeditor/ckeditor5-ui/src/toolbar/block/blocktoolbar';
+import '../theme/theme.css';
 
 // Plugins to include in the build.
-ClassicEditor.builtinPlugins = [
+const builtinPlugins = [
 	Essentials,
 	UploadAdapter,
 	Autoformat,
@@ -158,61 +171,7 @@ ClassicEditor.builtinPlugins = [
 ];
 
 // Editor configuration.
-ClassicEditor.defaultConfig = {
-	toolbar: {
-		items: [
-			'heading',
-			'|',
-			'bold',
-			'italic',
-			'underline',
-			'strikethrough',
-			'code',
-			'subscript',
-			'superscript',
-			'removeFormat',
-			'|',
-			'undo',
-			'redo',
-			'|',
-			'specialCharacters',
-			'horizontalLine',
-			'pageBreak',
-			'|',
-			'highlight',
-			'fontSize',
-			'fontColor',
-			'fontBackgroundColor',
-			'fontFamily',
-			'|',
-			'link',
-			'blockQuote',
-			'insertTable',
-			// 'uploadImage',
-			'insertImage',
-			// 'ckfinder',
-			'mediaEmbed',
-			'codeBlock',
-			'htmlEmbed',
-			'|',
-			'bulletedList',
-			'numberedList',
-			'|',
-			'outdent',
-			'indent',
-			'alignment',
-			'|',
-			'exportPdf',
-			'exportWord',
-			'importWord',
-			// 'wproofreader',
-			'findAndReplace',
-			'selectAll',
-			'|',
-			'sourceEditing',
-		],
-		// shouldNotGroupWhenFull: true,
-	},
+const defaultConfig = {
 	image: {
 		toolbar: [
 			'imageStyle:inline',
@@ -375,3 +334,97 @@ ClassicEditor.defaultConfig = {
 	// This value must be kept in sync with the language defined in webpack.config.js.
 	language: 'en',
 };
+
+const toolbar = {
+	items: [
+		'heading',
+		'|',
+		'bold',
+		'italic',
+		'underline',
+		'strikethrough',
+		'code',
+		'subscript',
+		'superscript',
+		'removeFormat',
+		'|',
+		'undo',
+		'redo',
+		'|',
+		'specialCharacters',
+		'horizontalLine',
+		'pageBreak',
+		'|',
+		'highlight',
+		'fontSize',
+		'fontColor',
+		'fontBackgroundColor',
+		'fontFamily',
+		'|',
+		'link',
+		'blockQuote',
+		'insertTable',
+		// 'uploadImage',
+		'insertImage',
+		// 'ckfinder',
+		'mediaEmbed',
+		'codeBlock',
+		'htmlEmbed',
+		'|',
+		'bulletedList',
+		'numberedList',
+		'|',
+		'outdent',
+		'indent',
+		'alignment',
+		'|',
+		'exportPdf',
+		'exportWord',
+		'importWord',
+		// 'wproofreader',
+		'findAndReplace',
+		'selectAll',
+		'|',
+		'sourceEditing',
+	],
+	// shouldNotGroupWhenFull: true,
+};
+
+const blockToolbar = [
+	'heading',
+	'|',
+	'bulletedList',
+	'numberedList',
+	'|',
+	'indent',
+	'outdent',
+	'|',
+	'imageUpload',
+	'blockQuote',
+	'insertTable',
+	'mediaEmbed',
+	'|',
+	'specialCharacters',
+	'htmlEmbed',
+];
+
+ClassicEditor.builtinPlugins = builtinPlugins;
+ClassicEditor.defaultConfig = { ...defaultConfig, toolbar };
+
+BalloonEditor.builtinPlugins = [...builtinPlugins, BlockToolbar];
+BalloonEditor.defaultConfig = { ...defaultConfig, blockToolbar };
+
+DecoupledEditor.builtinPlugins = [...builtinPlugins, IndentBlock];
+DecoupledEditor.defaultConfig = { ...defaultConfig, toolbar };
+
+InlineEditor.builtinPlugins = [...builtinPlugins];
+InlineEditor.defaultConfig = { ...defaultConfig, toolbar };
+
+const editor = {
+	ClassicEditor,
+	BalloonEditor,
+	DecoupledEditor,
+	InlineEditor,
+};
+
+export default editor;
