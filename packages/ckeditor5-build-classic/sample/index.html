@@ -6,12 +6,15 @@
 		<style>
 			body {
 				max-width: 800px;
+				background-color: #333;
 				margin: 20px auto;
 			}
 		</style>
 	</head>
 	<body>
 		<h1>CKEditor 5 – classic editor build – development sample</h1>
+		<button onclick="setImage()" id="setImage">SetImage</button>
+		<button onclick="setClose()" id="setImage">Close</button>
 
 		<div id="editor">
 			<h2>Sample</h2>
@@ -65,53 +68,111 @@
 
 		<script src="../build/editor.js"></script>
 		<script>
-			ClassicEditor.InlineEditor.create(
-				document.querySelector("#editor"),
-				{
-					toolbar: {
-						items: [
-							"heading",
-							"|",
-							"bold",
-							"italic",
-							"underline",
-							"strikethrough",
-							"code",
-							"subscript",
-							"superscript",
-							"removeFormat",
-							"|",
-							"undo",
-							"redo",
-						],
-						// shouldNotGroupWhenFull: true,
+			SevenDevEditor.InlineEditor.create(document.querySelector('#editor'), {
+				toolbar: {
+					items: [
+						'heading',
+						'|',
+						'bold',
+						'italic',
+						'underline',
+						'strikethrough',
+						'code',
+						'subscript',
+						'superscript',
+						'removeFormat',
+						'medialibrary',
+						'|',
+						'undo',
+						'redo'
+					]
+					// shouldNotGroupWhenFull: true,
+				},
+				mention: {
+					feeds: [
+						{
+							marker: '#',
+							feed: [
+								'#Barney',
+								'#Lily',
+								'#Marry Ann',
+								'#Marshall',
+								'#Robin',
+								'#Ted'
+							],
+							minimumCharacters: 1
+						},
+						{
+							marker: '@',
+							feed: [
+								'@Barney',
+								'@Lily',
+								'@Marry Ann',
+								'@Marshall',
+								'@Robin',
+								'@Ted'
+							],
+							minimumCharacters: 1
+						}
+					]
+				},
+				mediaLibrary: {
+					onOpen: function () {
+						console.log('onOpen');
 					},
+					onError: function (error) {
+						console.log('onError', error.message);
+					}
 				}
-			)
-				.then((editor) => {
+			})
+				.then(editor => {
 					window.editor = editor;
 				})
-				.catch((error) => {
-					console.error(
-						"There was a problem initializing the editor.",
-						error
-					);
+				.catch(error => {
+					console.error('There was a problem initializing the editor.', error);
 				});
 		</script>
 
 		<script>
-			ClassicEditor.ClassicEditor.create(
-				document.querySelector("#editor2")
-			)
-				.then((editor) => {
+			SevenDevEditor.ClassicEditor.create(document.querySelector('#editor2'))
+				.then(editor => {
 					window.editor2 = editor;
 				})
-				.catch((error) => {
-					console.error(
-						"There was a problem initializing the editor.",
-						error
-					);
+				.catch(error => {
+					console.error('There was a problem initializing the editor.', error);
 				});
+		</script>
+		<script>
+			const defaultImage = {
+				imageFallbackUrl:
+					'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9',
+				imageSources: [
+					{
+						sizes: '1500px',
+						srcset:
+							'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg&w=200&fit=max 200w,' +
+							'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max 600w,' +
+							'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg&fit=crop&w=1080&q=80&fit=max 1000w' +
+							'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg&q=80 1500w',
+						type: 'image/png'
+					}
+				],
+				imageTextAlternative: 'An alternative text for the image'
+			};
+
+			const setImage = () => {
+				// dispatchEvent ck:mediaLibrary:chooseImage
+				window.dispatchEvent(
+					new CustomEvent('ck:mediaLibrary:chooseImage', {
+						detail: { ...defaultImage }
+					})
+				);
+			};
+
+			const setClose = () => {
+				// dispatchEvent ck:mediaLibrary:close
+				window.dispatchEvent(new CustomEvent('ck:mediaLibrary:onClose'));
+			};
 		</script>
 	</body>
 </html>

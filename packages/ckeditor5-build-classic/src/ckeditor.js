@@ -15,7 +15,6 @@ import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
-import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
 import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 import Image from '@ckeditor/ckeditor5-image/src/image';
@@ -34,6 +33,7 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
+import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 
 // New plugins
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
@@ -71,6 +71,7 @@ import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily';
 
 import AutoImage from '@ckeditor/ckeditor5-image/src/autoimage';
 import ImageInsert from '@ckeditor/ckeditor5-image/src/imageinsert';
+import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
 
 import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties';
 
@@ -85,6 +86,9 @@ import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
 
 //
 import IndentBlock from '@ckeditor/ckeditor5-indent/src/indentblock';
+
+//
+import MediaLibrary from '../plugins/media-library';
 
 import sanitize from 'sanitize-html';
 
@@ -105,7 +109,6 @@ const builtinPlugins = [
 	Bold,
 	Italic,
 	BlockQuote,
-	// CKFinder,
 	CloudServices,
 	EasyImage,
 	Heading,
@@ -124,6 +127,7 @@ const builtinPlugins = [
 	Table,
 	TableToolbar,
 	TextTransformation,
+	Mention,
 	//
 	SourceEditing,
 	HtmlEmbed,
@@ -157,6 +161,7 @@ const builtinPlugins = [
 	//
 	AutoImage,
 	ImageInsert,
+	LinkImage,
 	//
 	ListProperties,
 	//
@@ -168,6 +173,7 @@ const builtinPlugins = [
 	SelectAll,
 	//
 	Clipboard,
+	MediaLibrary
 ];
 
 // Editor configuration.
@@ -179,56 +185,56 @@ const defaultConfig = {
 			'imageStyle:side',
 			'|',
 			'toggleImageCaption',
-			'imageTextAlternative',
-		],
+			'imageTextAlternative'
+		]
 	},
 	table: {
-		contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
+		contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
 	},
 	heading: {
 		options: [
 			{
 				model: 'paragraph',
 				title: 'Paragraph',
-				class: 'ck-heading_paragraph',
+				class: 'ck-heading_paragraph'
 			},
 			{
 				model: 'heading1',
 				view: 'h1',
 				title: 'Heading 1',
-				class: 'ck-heading_heading1',
+				class: 'ck-heading_heading1'
 			},
 			{
 				model: 'heading2',
 				view: 'h2',
 				title: 'Heading 2',
-				class: 'ck-heading_heading2',
+				class: 'ck-heading_heading2'
 			},
 			{
 				model: 'heading3',
 				view: 'h3',
 				title: 'Heading 3',
-				class: 'ck-heading_heading3',
+				class: 'ck-heading_heading3'
 			},
 			{
 				model: 'heading4',
 				view: 'h4',
 				title: 'Heading 4',
-				class: 'ck-heading_heading4',
+				class: 'ck-heading_heading4'
 			},
 			{
 				model: 'heading5',
 				view: 'h5',
 				title: 'Heading 5',
-				class: 'ck-heading_heading5',
+				class: 'ck-heading_heading5'
 			},
 			{
 				model: 'heading6',
 				view: 'h6',
 				title: 'Heading 6',
-				class: 'ck-heading_heading6',
-			},
-		],
+				class: 'ck-heading_heading6'
+			}
+		]
 	},
 	link: {
 		decorators: [
@@ -238,18 +244,18 @@ const defaultConfig = {
 				defaultValue: true,
 				attributes: {
 					target: '_blank',
-					rel: 'noopener noreferrer',
-				},
+					rel: 'noopener noreferrer'
+				}
 			},
 			{
 				mode: 'manual',
 				defaultValue: false,
 				label: 'NoFollow',
 				attributes: {
-					rel: 'nofollow',
-				},
-			},
-		],
+					rel: 'nofollow'
+				}
+			}
+		]
 	},
 	htmlEmbed: {
 		showPreviews: false,
@@ -258,10 +264,10 @@ const defaultConfig = {
 			// the `<script>` elements and `on*` attributes.
 			const outputHtml = sanitize(inputHtml);
 			return {
-				html: outputHtml,
+				html: outputHtml
 				// true or false depending on whether the sanitizer stripped anything.
 			};
-		},
+		}
 	},
 	codeBlock: {
 		languages: [
@@ -298,26 +304,26 @@ const defaultConfig = {
 			{ language: 'less', label: 'Less' },
 			{ language: 'scss', label: 'SCSS' },
 			{ language: 'stylus', label: 'Stylus' },
-			{ language: 'vue', label: 'Vue' },
-		],
+			{ language: 'vue', label: 'Vue' }
+		]
 	},
 	autosave: {
 		save(editor) {
 			// The saveData() function must return a promise
 			// which should be resolved when the data is successfully saved.
-			// return saveData(editor.getData());
-		},
+			return saveData(editor.getData());
+		}
 	},
 	mediaEmbed: {
 		extraProviders: [
 			{
 				name: 'tiktok',
 				url: /^https?:\/\/www.?tiktok\.com\/(@.*)\/video\/([0-9]*)\/?/,
-				html: (match) => {
+				html: match => {
 					return `<blockquote class="tiktok-embed" cite="${match[0]}" data-video-id="${match[2]}" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="${match[1]}" href="https://www.tiktok.com/${match[1]}">${match[1]}</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>`;
-				},
-			},
-		],
+				}
+			}
+		]
 	},
 	// ckfinder: {
 	// 	options: {
@@ -333,6 +339,12 @@ const defaultConfig = {
 	// },
 	// This value must be kept in sync with the language defined in webpack.config.js.
 	language: 'en',
+	mediaLibrary: {
+		onClick: (editor, media) => {
+			console.log('media', media);
+			// editor.execute('insertImage', { source: media.url });
+		}
+	}
 };
 
 const toolbar = {
@@ -364,7 +376,7 @@ const toolbar = {
 		'link',
 		'blockQuote',
 		'insertTable',
-		// 'uploadImage',
+		'uploadImage',
 		'insertImage',
 		// 'ckfinder',
 		'mediaEmbed',
@@ -385,11 +397,10 @@ const toolbar = {
 		'findAndReplace',
 		'selectAll',
 		'|',
-		'sourceEditing',
-	],
+		'sourceEditing'
+	]
 	// shouldNotGroupWhenFull: true,
 };
-
 const blockToolbar = [
 	'heading',
 	'|',
@@ -405,7 +416,7 @@ const blockToolbar = [
 	'mediaEmbed',
 	'|',
 	'specialCharacters',
-	'htmlEmbed',
+	'htmlEmbed'
 ];
 
 ClassicEditor.builtinPlugins = builtinPlugins;
@@ -424,7 +435,7 @@ const editor = {
 	ClassicEditor,
 	BalloonEditor,
 	DecoupledEditor,
-	InlineEditor,
+	InlineEditor
 };
 
 export default editor;

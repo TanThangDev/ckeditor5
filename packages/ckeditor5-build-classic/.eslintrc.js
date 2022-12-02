@@ -9,6 +9,9 @@
 
 module.exports = {
 	rules: {
-		'ckeditor5-rules/ckeditor-imports': 'off'
+		'ckeditor5-rules/ckeditor-imports': 'off',
+		'space-in-parens': 'off',
+		'no-undef': 'off',
+		'array-bracket-spacing': 'off'
 	}
 };
